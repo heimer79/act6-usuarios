@@ -1,18 +1,27 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h2 class="mb-0">Listado de usuarios</h2>
-  <span class="badge bg-secondary">{{ users().length }} usuarios</span>
-</div>
-
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-  @for (user of users(); track user._id) {
-    <div class="col">
-      <app-user-card [user]="user" (onDelete)="deleteUser($event)" />
-    </div>
+  @if (!loading()) {
+    <span class="badge bg-secondary">{{ users().length }} usuarios</span>
   }
 </div>
 
-@if (users().length === 0) {
+@if (loading()) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando usuarios...</p>
+  </div>
+} @else if (users().length === 0) {
   <div class="text-center py-5">
     <p class="text-muted fs-5">No hay usuarios disponibles.</p>
+  </div>
+} @else {
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    @for (user of users(); track user._id) {
+      <div class="col">
+        <app-user-card [user]="user" (onDelete)="deleteUser($event)" />
+      </div>
+    }
   </div>
 }
