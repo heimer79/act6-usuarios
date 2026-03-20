@@ -1,0 +1,99 @@
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow">
+      <div class="card-header bg-dark text-white">
+        <h4 class="mb-0">{{ title() }}</h4>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre *</label>
+            <input
+              formControlName="first_name"
+              type="text"
+              class="form-control"
+              placeholder="Introduce nombre de usuario"
+              [class.is-invalid]="f['first_name'].invalid && f['first_name'].touched"
+            />
+            <div class="invalid-feedback">El nombre es obligatorio.</div>
+          </div>
+
+          <!-- Apellidos -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Apellidos *</label>
+            <input
+              formControlName="last_name"
+              type="text"
+              class="form-control"
+              placeholder="Introduce apellido de usuario"
+              [class.is-invalid]="f['last_name'].invalid && f['last_name'].touched"
+            />
+            <div class="invalid-feedback">Los apellidos son obligatorios.</div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email *</label>
+            <input
+              formControlName="email"
+              type="email"
+              class="form-control"
+              placeholder="Introduce email de usuario"
+              [class.is-invalid]="f['email'].invalid && f['email'].touched"
+            />
+            <div class="invalid-feedback">Introduce un email válido.</div>
+          </div>
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nombre de usuario *</label>
+            <input
+              formControlName="username"
+              type="text"
+              class="form-control"
+              placeholder="Introduce username"
+              [class.is-invalid]="f['username'].invalid && f['username'].touched"
+            />
+            <div class="invalid-feedback">El username es obligatorio.</div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Contraseña *</label>
+            <input
+              formControlName="password"
+              type="password"
+              class="form-control"
+              placeholder="Mínimo 5 caracteres"
+              [class.is-invalid]="f['password'].invalid && f['password'].touched"
+            />
+            <div class="invalid-feedback">Mínimo 5 caracteres.</div>
+          </div>
+
+          <!-- Imagen -->
+          <div class="mb-4">
+            <label class="form-label fw-semibold">URL de imagen *</label>
+            <input
+              formControlName="image"
+              type="text"
+              class="form-control"
+              placeholder="Introduce url de foto usuario (https://...)"
+              [class.is-invalid]="f['image'].invalid && f['image'].touched"
+            />
+            <div class="invalid-feedback">Introduce una URL válida (http/https).</div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success flex-fill">
+              {{ btnText() }}
+            </button>
+            <a routerLink="/home" class="btn btn-secondary flex-fill">Cancelar</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
