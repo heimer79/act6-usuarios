@@ -5,3 +5,11 @@ export interface IResponse {
   error?: string;
   result?: IUser;
 }
+
+export interface IUsersListResponse {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+  results: IUser[];
+}

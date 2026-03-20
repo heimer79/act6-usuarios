@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { IUser } from '../interfaces/user.interface';
-import { IResponse } from '../interfaces/response.interface';
+import { IResponse, IUsersListResponse } from '../interfaces/response.interface';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
@@ -11,10 +11,11 @@ export class UsersService {
   private httpClient = inject(HttpClient);
 
   // GET /users — listado completo
-  getAll(): Promise<IUser[]> {
-    return lastValueFrom(
-      this.httpClient.get<IUser[]>(this.baseUrl)
+  async getAll(): Promise<IUser[]> {
+    const resp = await lastValueFrom(
+      this.httpClient.get<IUsersListResponse>(this.baseUrl)
     );
+    return resp.results;
   }
 
   // GET /users/:id — detalle de un usuario
