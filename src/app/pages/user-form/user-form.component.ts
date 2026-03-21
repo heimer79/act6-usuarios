@@ -16,6 +16,7 @@ export class UserFormComponent implements OnInit {
   private usersService = inject(UsersService);
 
   isEditMode = signal(false);
+  userId = signal<string | null>(null);
   title = signal('Nuevo Usuario');
   btnText = signal('Guardar');
 
@@ -28,12 +29,22 @@ export class UserFormComponent implements OnInit {
     image: new FormControl('', [Validators.required, Validators.pattern('https?://.+')]),
   });
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode.set(true);
+      this.userId.set(id);
       this.title.set('Actualizar Usuario');
       this.btnText.set('Actualizar');
+
+      const user = await this.usersService.getById(id);
+      this.userForm.patchValue({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        username: user.username,
+        image: user.image,
+      });
     }
   }
 
@@ -48,7 +59,9 @@ export class UserFormComponent implements OnInit {
     }
 
     const userData = this.userForm.value as any;
-    const resp = await this.usersService.create(userData);
+    const resp = this.isEditMode()
+      ? await this.usersService.update(this.userId()!, userData)
+      : await this.usersService.create(userData);
 
     if (resp.success) {
       await Swal.fire('¡Éxito!', resp.success, 'success');
