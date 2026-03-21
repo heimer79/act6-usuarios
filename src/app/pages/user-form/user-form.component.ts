@@ -63,8 +63,9 @@ export class UserFormComponent implements OnInit {
       ? await this.usersService.update(this.userId()!, userData)
       : await this.usersService.create(userData);
 
-    if (resp.success) {
-      await Swal.fire('¡Éxito!', resp.success, 'success');
+    if (!resp.error) {
+      const msg = resp.success ?? (this.isEditMode() ? 'Usuario actualizado correctamente.' : 'Usuario creado correctamente.');
+      await Swal.fire('¡Éxito!', msg, 'success');
       this.router.navigate(['/home']);
     } else {
       Swal.fire('Error', resp.error, 'error');
