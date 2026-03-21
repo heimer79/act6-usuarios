@@ -35,11 +35,11 @@ export class HomeComponent implements OnInit {
     if (!result.isConfirmed) return;
 
     const resp = await this.usersService.delete(user._id!);
-    if (resp.success) {
-      Swal.fire('Eliminado', resp.success, 'success');
+    if (!resp.error) {
+      Swal.fire('Eliminado', resp.success ?? 'Usuario eliminado correctamente.', 'success');
       this.users.update((list) => list.filter((u) => u._id !== user._id));
     } else {
-      Swal.fire('Error', resp.error ?? 'No se pudo eliminar el usuario.', 'error');
+      Swal.fire('Error', resp.error, 'error');
     }
   }
 }
