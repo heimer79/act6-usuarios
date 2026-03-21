@@ -1,6 +1,8 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UsersService } from '../../services/users.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-form',
@@ -8,7 +10,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './user-form.component.html',
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private usersService = inject(UsersService);
+
   isEditMode = signal(false);
   title = signal('Nuevo Usuario');
   btnText = signal('Guardar');
@@ -22,15 +28,33 @@ export class UserFormComponent {
     image: new FormControl('', [Validators.required, Validators.pattern('https?://.+')]),
   });
 
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode.set(true);
+      this.title.set('Actualizar Usuario');
+      this.btnText.set('Actualizar');
+    }
+  }
+
   get f() {
     return this.userForm.controls;
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       return;
     }
-    alert('Formulario enviado (integración pendiente)');
+
+    const userData = this.userForm.value as any;
+    const resp = await this.usersService.create(userData);
+
+    if (resp.success) {
+      await Swal.fire('¡Éxito!', resp.success, 'success');
+      this.router.navigate(['/home']);
+    } else {
+      Swal.fire('Error', resp.error, 'error');
+    }
   }
 }
